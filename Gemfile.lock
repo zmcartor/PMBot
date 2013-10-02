@@ -1,0 +1,13 @@
+GEM
+  specs:
+    cinch (2.0.9)
+    marky_markov (0.3.4)
+      ox (~> 1.4)
+    ox (1.9.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cinch
+  marky_markov
