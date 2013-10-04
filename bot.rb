@@ -25,4 +25,13 @@ OptionParser.new do |opts|
 
 end.parse!
 
-PMBot::Botcore.new(options).solution_that!
+BResponse = PMBot::BotResponse
+BRegex = PMBot::Botregex
+BContent = PMBot::BotResponseGenerator
+
+BOTACTIONS = {message:[BResponse.new(BRegex.goodbyes, BContent.farewell),
+                       BResponse.new(BRegex.greetings, BContent.touchbase),
+                       BResponse.new(BRegex.match_any, BContent.clueless_ok)
+]}
+
+PMBot::Botcore.new(options, BOTACTIONS).solution_that!

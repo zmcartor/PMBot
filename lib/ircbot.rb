@@ -2,33 +2,21 @@ module PMBot
   class Botcore
     require 'cinch'
 
-    def initialize(config = OpenStruct.new)
+    #roll through bot actions and construct on :key listeners
+    def initialize(config = OpenStruct.new, botActions={})
       @bot = Cinch::Bot.new do
+        configure do |c|
+          c.server = config.server || "HALCYON.IL.US.DAL.NET"
+          c.channels = config.channels
+          c.nick = config.nick || "PMBOT"
+        end
 
-      configure do |c|
-        c.server = config.server || "HALCYON.IL.US.DAL.NET"
-        c.channels = config.channels
-        c.nick = config.nick || "PMBOT"
-      end
-
-      # todo, factor out the responses from BotCore
-      # BotCore should only need to know howto communicate with IRC
-      on :message, Botregex.greetings do |m|
-        m.reply "Hello this is #{bot.nick}, how about a quick Milestone #{rand(1..34)} touchbase?"
-      end
-
-      on :message, Botregex.goodbyes do |m|
-        m.reply "Hey thanks for joining us today, looking forward to bringing this one over the finish line"
-      end
-
-      #catch all has 1 in 10 chance of randomly saying stuff about your last message
-      chances = (1..10).to_a
-      on :message do |m|
-        m.reply "... .... ok ..." if chances.sample == 1
-      end
-
-
-    end #end bot configuration
+        botActions[:message].each do |action|
+          on :message, action.regex do |m|
+            action.speak m
+          end
+        end
+      end #end bot configuration
     end #init
 
     def solution_that!
@@ -36,15 +24,27 @@ module PMBot
     end
   end #class
 
-  # serve as interface for regexes when matching against messages
-  # maybe todo - bind together match and response in one object
+  class BotResponse
+    #Tie together regex and responseText objects
+    attr_accessor :regex
+
+    def initialize(regex, responseText)
+      @regex = regex
+      @responseText = responseText
+    end
+
+    def speak(channel)
+      channel.reply @responseText
+    end
+  end
+
+# serve as interface for regexes when matching against messages
   class Botregex
 
     class << self
       def greetings
         /hello|hi|yoyos|morning|good morning/
       end
-
 
       def goodbyes
         /later|laterz|see ya|bye|goodbye|have a good one/
@@ -53,7 +53,46 @@ module PMBot
       def tech_words
         /web|restful|rails|json|api|iOS/
       end
+
+      def match_any
+        //
+      end
+
     end
   end  #end class
+
+  class BotResponseGenerator
+
+    class << self
+
+      @@bot_nick ='Mr.Suit'
+      def nick=(nick)
+        @@bot_nick = nick
+      end
+
+      def touchbase
+       "Hello this is #{@@bot_nick}, how about a quick Milestone #{rand(1..34)} touchbase?"
+      end
+
+      def farewell
+        'Hey thanks for joining us today, looking forward to bringing this one over the finish line'
+      end
+
+      def clueless_ok
+          pause = ''
+          (1..3).to_a.sample.times{pause << '...'}
+          "#{pause}ok"
+      end
+
+      def markov(root_word)
+        #todo, markov chained output
+      end
+
+      def misinterpreted_hook(message)
+        #todo lexically analyze message and create markov off selected noun
+      end
+    end
+  end
+
 
 end #end PMBot Module
