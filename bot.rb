@@ -33,7 +33,9 @@ BContent.nick = options.nick
 
 BOTACTIONS = {message:[BResponse.new(BRegex.goodbyes, BContent.farewell),
                        BResponse.new(BRegex.greetings, BContent.touchbase),
-                       BResponse.new(BRegex.match_any, BContent.clueless_ok, 1..10)
+                       BResponse.new(BRegex.match_any, BContent.clueless_ok, 1..10),
+                      BResponse.new(BRegex.git_words, BContent.source_control),
+                      BResponse.new(BRegex.match_any, BContent.clueless_agreement, 1..20),
 ]}
 
 PMBot::Botcore.new(options, BOTACTIONS).solution_that!

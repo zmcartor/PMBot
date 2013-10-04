@@ -9,6 +9,7 @@ module PMBot
           c.nick = config.nick || "PMBOT"
         end
 
+        #override this or simply stub out in test harness ?
         botActions[:message].each do |action|
           on :message, action.regex do |m|
             action.speak m
@@ -33,6 +34,9 @@ module PMBot
     end
 
     def speak(channel)
+      #some of the functions take the raw message arg as a seed.
+      # howto determine whether the responseText messsage needs a param?
+
       channel.reply @responseText if (@random_range).to_a.sample == 1
     end
   end
@@ -51,6 +55,10 @@ module PMBot
 
       def tech_words
         /web|restful|rails|json|api|iOS/
+      end
+
+      def git_words
+        /pull request|merged|merge|branch|branched/
       end
 
       def match_any
@@ -78,9 +86,15 @@ module PMBot
       end
 
       def clueless_ok
-          pause = ''
-          (1..5).to_a.sample.times{pause << '... '}
-          "#{pause}ok"
+          "#{random_amount_of_dots} ok"
+      end
+
+      def clueless_agreement
+        "#{random_amount_of_dots} mm hmm mm #{random_amount_of_dots}"
+      end
+
+      def source_control
+        'so does he need a rebase?'
       end
 
       def markov(root_word)
@@ -90,6 +104,16 @@ module PMBot
       def misinterpreted_hook(message)
         #todo lexically analyze message and create markov off selected noun
       end
+
+      private
+
+      def random_amount_of_dots
+        dots = ''
+        aggregate_pause = lambda {(1..5.to_a.sample.times{dots.concat('... ')})}
+        dots
+      end
+
+
     end
   end
 
