@@ -4,11 +4,13 @@ PMBot
 IRC Bot PM for your channel adds amazing business value for every enterprise engagement
 
 Want to get started? Let me solution that for you:
-ruby bot.rb --channel "#channel password"
-
+```shell
+bot.rb --channel "#channel password"
+```
 These switches also work should you require a different deliverable:
-ruby bot --channel #channel --server irc.server.net --nick CoolBot
-
+```shell
+bot.rb --channel #channel --server irc.server.net --nick CoolBot
+```
 ### Is this some kind of joke?
 This program is a work of humor. We believe PMs are an integral part of the
 development process. It's not easy wrangling devs, removing roadblocks, and
