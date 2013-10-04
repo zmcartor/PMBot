@@ -29,9 +29,11 @@ BResponse = PMBot::BotResponse
 BRegex = PMBot::Botregex
 BContent = PMBot::BotResponseGenerator
 
+BContent.nick = options.nick
+
 BOTACTIONS = {message:[BResponse.new(BRegex.goodbyes, BContent.farewell),
                        BResponse.new(BRegex.greetings, BContent.touchbase),
-                       BResponse.new(BRegex.match_any, BContent.clueless_ok)
+                       BResponse.new(BRegex.match_any, BContent.clueless_ok, 1..10)
 ]}
 
 PMBot::Botcore.new(options, BOTACTIONS).solution_that!

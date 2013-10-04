@@ -1,8 +1,6 @@
 module PMBot
   class Botcore
     require 'cinch'
-
-    #roll through bot actions and construct on :key listeners
     def initialize(config = OpenStruct.new, botActions={})
       @bot = Cinch::Bot.new do
         configure do |c|
@@ -28,13 +26,14 @@ module PMBot
     #Tie together regex and responseText objects
     attr_accessor :regex
 
-    def initialize(regex, responseText)
+    def initialize(regex, responseText, random_range=1..1)
       @regex = regex
       @responseText = responseText
+      @random_range = random_range
     end
 
     def speak(channel)
-      channel.reply @responseText
+      channel.reply @responseText if (@random_range).to_a.sample == 1
     end
   end
 
@@ -80,7 +79,7 @@ module PMBot
 
       def clueless_ok
           pause = ''
-          (1..3).to_a.sample.times{pause << '...'}
+          (1..5).to_a.sample.times{pause << '... '}
           "#{pause}ok"
       end
 
